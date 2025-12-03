@@ -1,1 +1,116 @@
 \section{Mathematical Model}
+
+To simulate the double pendulum, we must first derive the equations of motion. Because the system involves multiple degrees of freedom, the Lagrangian formulation of mechanics is significantly more efficient than the Newtonian approach.
+
+\subsection{System Setup and Geometry}
+
+We consider a system of two point masses, $m_1$ and $m_2$, connected by massless rigid rods of length $l_1$ and $l_2$. The system is confined to a 2D plane and acted upon by a uniform gravitational field $g$ pointing downwards. The system can be visualized in \figref{system}. Note that the system allows for \(\theta_1\) to be greater than \(90^\circ\) and not intersect with the first pivot. 
+
+
+\begin{figure}[h]
+\begin{center}
+  \begin{tikzpicture}[>=latex, thick]
+    % --- Definitions ---
+    \def\Lone{3.5}
+    \def\Ltwo{3}
+    \def\angOne{35}  % Theta 1
+    \def\angTwo{65}  % Theta 2
+    \def\massR{0.3}
+    \def\arcR{1.2}   % Radius of the angle arcs
+
+    % --- Coordinates ---
+    \coordinate (O) at (0,0);
+    \coordinate (M1) at ({\angOne-90}:\Lone);
+    \coordinate (M2) at ($(M1) + ({\angTwo-90}:\Ltwo)$);
+
+    % --- Ceiling ---
+    \draw[thick] (-1.5,0) -- (1.5,0);
+    \fill[pattern=north east lines] (-1.5,0) rectangle (1.5,0.3);
+
+    % --- Vertical Reference Lines ---
+    \draw[dashed, gray] (O) -- (0,-4.5);
+    \draw[dashed, gray] (M1) -- ++(0,-3.5);
+
+    % --- Rods ---
+    \draw[line width=1.5pt] (O) -- (M1) node[midway, right=5pt] {$\ell_1$};
+    \draw[line width=1.5pt] (M1) -- (M2) node[midway, right=5pt] {$\ell_2$};
+
+    % --- Masses ---
+    \filldraw[fill=gray!40] (M1) circle (\massR) node[right=0.4cm] {$m_1$};
+    \filldraw[fill=gray!40] (M2) circle (\massR) node[right=0.4cm] {$m_2$};
+
+    % --- FIXED ANGLES ---
+    % Using '++' ensures the arc is anchored exactly to the pivot point
+    
+    % Theta 1
+    % Move to O, shift down by arcR, then draw arc
+    \draw[->, thin] (O) ++(-90:\arcR) arc (-90:{\angOne-90}:\arcR);
+    \node at ({\angOne/2 - 90}:\arcR+0.3) {$\theta_1$};
+
+    % Theta 2
+    % Move to M1, shift down by arcR, then draw arc
+    \draw[->, thin] (M1) ++(-90:\arcR) arc (-90:{\angTwo-90}:\arcR);
+    % Label calculation is relative to M1
+    \path (M1) ++({\angTwo/2 - 90}:\arcR+0.3) node {$\theta_2$};
+
+\end{tikzpicture}
+\end{center}
+\caption{Double pendulum system}
+\figlabel{system}
+\end{figure}
+
+
+We define the generalized coordinates as the angles $\theta_1$ and $\theta_2$, measured from the vertical axis. The origin $(0,0)$ is the pivot point of the first pendulum.
+
+The Cartesian coordinates $(x_1, y_1)$ of the center of mass $m_1$ and $(x_2, y_2)$ of the center of mass $m_2$ can be expressed in terms of the angles:
+\begin{align}
+  x_1 &= \frac{\ell_1}{2} \sin \theta_1 \\
+    y_1 &= -\frac{\ell_1}{2} \cos \theta_1 \\
+    x_2 &=\ell\lt(\sin\theta_1+\frac{1}{2}\sin\theta_2\rt)\\
+    y_2 &= - \ell\lt( \cos \theta_1+\frac{1}{2}\cos\theta_2\rt)
+\end{align}
+
+\subsection{The Lagrangian Formulation}
+
+The Lagrangian $\mathcal{L}$ is defined as the difference between the kinetic energy ($T$) and the potential energy ($V$) of the system:
+\[ \mathcal{L} = T - V \]
+
+\subsubsection{Kinetic Energy ($T$)}
+The total kinetic energy is the sum of the kinetic energies of the individual masses:
+\[ T = \frac{1}{2}m_1 v_1^2 + \frac{1}{2}m_2 v_2^2 \]
+Calculating the velocities squared ($v^2 = \dot{x}^2 + \dot{y}^2$):
+\begin{align*}
+    v_1^2 &= (l_1 \dot{\theta}_1)^2 \\
+    v_2^2 &= \dot{x}_2^2 + \dot{y}_2^2 \\
+          &= l_1^2 \dot{\theta}_1^2 + l_2^2 \dot{\theta}_2^2 + 2 l_1 l_2 \dot{\theta}_1 \dot{\theta}_2 (\sin \theta_1 \sin \theta_2 + \cos \theta_1 \cos \theta_2) \\
+          &= l_1^2 \dot{\theta}_1^2 + l_2^2 \dot{\theta}_2^2 + 2 l_1 l_2 \dot{\theta}_1 \dot{\theta}_2 \cos(\theta_1 - \theta_2)
+\end{align*}
+Thus, the total kinetic energy is:
+\begin{equation}
+    T = \frac{1}{2}(m_1 + m_2) l_1^2 \dot{\theta}_1^2 + \frac{1}{2}m_2 l_2^2 \dot{\theta}_2^2 + m_2 l_1 l_2 \dot{\theta}_1 \dot{\theta}_2 \cos(\theta_1 - \theta_2)
+\end{equation}
+
+\subsubsection{Potential Energy ($V$)}
+Assuming potential energy is zero at $y=0$, we have:
+\begin{align}
+    V &= m_1 g y_1 + m_2 g y_2 \nonumber \\
+      &= -(m_1 + m_2) g l_1 \cos \theta_1 - m_2 g l_2 \cos \theta_2
+\end{align}
+
+\subsection{Equations of Motion}
+Applying the Euler-Lagrange equation for each coordinate $\theta_i$:
+\[ \frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\theta}_i}\right) - \frac{\partial \mathcal{L}}{\partial \theta_i} = 0 \]
+
+Solving these derivatives yields a system of two coupled, non-linear second-order differential equations.
+
+\textbf{For $\theta_1$:}
+\begin{equation}
+    (m_1 + m_2) l_1 \ddot{\theta}_1 + m_2 l_2 \ddot{\theta}_2 \cos(\theta_1 - \theta_2) + m_2 l_2 \dot{\theta}_2^2 \sin(\theta_1 - \theta_2) + (m_1 + m_2) g \sin \theta_1 = 0
+\end{equation}
+
+\textbf{For $\theta_2$:}
+\begin{equation}
+    m_2 l_2 \ddot{\theta}_2 + m_2 l_1 \ddot{\theta}_1 \cos(\theta_1 - \theta_2) - m_2 l_1 \dot{\theta}_1^2 \sin(\theta_1 - \theta_2) + m_2 g \sin \theta_2 = 0
+\end{equation}
+
+These two equations fully describe the motion of the double pendulum. In Section 3, we will rearrange these terms to solve for $\ddot{\theta}_1$ and $\ddot{\theta}_2$ explicitly to implement the RK4 algorithm.
