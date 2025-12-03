@@ -1,0 +1,112 @@
+%------------------------------------------------
+% % PAGE LAYOUT & ENCODING
+%------------------------------------------------
+% This uses the simpler 'margin=1in' from your second example.
+% Your first example had: [tmargin=2cm,rmargin=1in,lmargin=1in,margin=0.85in,bmargin=2cm,footskip=.2in]
+\usepackage[margin=1in]{geometry} 
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern} % Better font than default
+\usepackage[english]{babel}
+\usepackage{microtype} % Improves text spacing
+
+%------------------------------------------------
+% % MATH & SYMBOLS PACKAGES
+%------------------------------------------------
+\usepackage{amsmath,amsfonts,amsthm,amssymb} % Core math
+\usepackage{mathtools} % Extensions for amsmath
+\usepackage{xfrac} % Slanted fractions (sfrac)
+\usepackage[makeroom]{cancel} % Cancel terms in equations
+\usepackage{bm} % Bold math symbols
+\usepackage{bbm} % Blackboard bold (e.g. \mathbbm{1})
+\usepackage{stmaryrd} % More symbols
+\usepackage{physics} % Common physics/math commands
+\usepackage{siunitx} % Units and scientific notation
+\usepackage{mhchem} % Chemistry formulas
+
+%------------------------------------------------
+% % GRAPHICS, COLOR & BOXES
+%------------------------------------------------
+\usepackage{xcolor}
+  \newcommand\cave[1]{\textcolor{red}{#1}}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\usepackage{subcaption} % For subfigures
+\usepackage{tikz}
+\usepackage{tikz-cd} % Commutative diagrams
+\usepackage{tikzsymbols}
+\usetikzlibrary{patterns,arrows.meta,calc,decorations.pathreplacing}
+\usepackage[most,many,breakable]{tcolorbox}
+
+%------------------------------------------------
+% % LISTS, TABLES & ALGORITHMS
+%------------------------------------------------
+\usepackage{enumitem} % Advanced list customization
+\usepackage{multicol,array}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+%------------------------------------------------
+% % FILE & DOCUMENT UTILITIES
+%------------------------------------------------
+\usepackage{subfiles} % For multi-file projects
+\usepackage{import}
+\usepackage{pdfpages} % Include PDF pages
+\usepackage{comment} % Multi-line comments
+\usepackage{etoolbox} % Programming tools
+\usepackage{xifthen} % Conditional commands
+\usepackage{varwidth} % Box with variable width
+\usepackage{transparent}
+%\usepackage{authblk} % Commented out as in your original
+
+%------------------------------------------------
+% % HEADER, FOOTER & PAGE STYLE
+%------------------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancyplain}
+\fancyhead{}
+\fancyfoot[L]{}
+\fancyfoot[C]{}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{00pt}
+\setlength{\headheight}{13.6pt}
+
+%------------------------------------------------
+% % THEOREM ENVIRONMENTS
+%------------------------------------------------
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+%------------------------------------------------
+% % NUMBERING
+%------------------------------------------------
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+
+%------------------------------------------------
+% % CUSTOM COMMANDS
+%------------------------------------------------
+
+%------------------------------------------------
+% % HYPERLINKS & REFERENCES (Load Near End)
+%------------------------------------------------
+\usepackage{hyperref}
+\usepackage{theoremref} % Must load after amsthm and hyperref
+\usepackage{bookmark} % Better PDF bookmarks
+\usepackage{nameref} % Reference sections by name
+\hypersetup{
+    pdftitle={Assignment},
+    colorlinks=true, 
+    linkcolor=blue!90,
+    bookmarksnumbered=true,
+    bookmarksopen=true
+}
+\usepackage{varioref}
