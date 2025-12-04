@@ -1,2 +1,105 @@
 \section{Numerical Model}
-The full Julia code used to execute this method used in this derivation can be found in \appref{A}.
+The full Julia code used to execute this method used in this derivation can be found in \appref{A}. In order to solve this system numerically we must bring this system to a first-order differential equation.
+\subsection{Isolating \(\ddot\theta\)}
+
+We start from our derived second-order equations from last section \eqref{theta1}, and \eqref{theta2}.
+
+Rearrange each equation to isolate the terms that multiply the accelerations on the left and move the remaining terms to the right-hand side:
+\begin{align}
+  (m_1 + m_2) l_1 \ddot{\theta}_1
+  \+\ m_2 l_2 \cos(\theta_1-\theta_2)\ddot{\theta}_2
+  &=\ -m_2 l_2 \dot{\theta}_2^2 \sin(\theta_1-\theta_2) - (m_1+m_2) g \sin\theta_1, \label{eq:rearr1}\\
+  m_2 l_1 \cos(\theta_1-\theta_2)\ddot{\theta}_1
+  \+\ m_2 l_2 \ddot{\theta}_2
+  &=\ -\big( - m_2 l_1 \dot{\theta}_1^2 \sin(\theta_1-\theta_2) + m_2 g \sin\theta_2\big). \label{eq:rearr2}
+\end{align}
+
+Define the mass matrix \(M(\theta)\) and the right-hand side vector \(b(\theta,\omega)\) (with \(\omega_i=\dot\theta_i\)):
+\[
+M(\theta)=
+\begin{pmatrix}
+a_{11} & a_{12} \\[6pt]
+a_{21} & a_{22}
+\end{pmatrix}
+=
+\begin{pmatrix}
+(m_1+m_2) l_1 & m_2 l_2 \cos(\theta_1-\theta_2) \\[6pt]
+m_2 l_1 \cos(\theta_1-\theta_2) & m_2 l_2
+\end{pmatrix},
+\]
+\[
+b(\theta,\omega)=
+\begin{pmatrix}
+b_1\\[6pt] b_2
+\end{pmatrix}
+=
+\begin{pmatrix}
+-m_2 l_2 \omega_2^2 \sin(\theta_1-\theta_2) - (m_1+m_2) g \sin\theta_1 \\[6pt]
+\m_2 l_1 \omega_1^2 \sin(\theta_1-\theta_2) - m_2 g \sin\theta_2
+\end{pmatrix}.
+\]
+
+Thus the coupled accelerations satisfy the matrix equation
+\[
+M(\theta)\ddot{\theta} =\ b(\theta,\omega),
+\qquad
+\ddot\theta=\begin{pmatrix}\ddot\theta_1\\[4pt]\ddot\theta_2\end{pmatrix}.
+\]
+
+For a \(2\times2\) matrix we can solve systems by computing the inverse by hand so we can easily find \(\ddot\theta\).
+Apply \(M^{-1}\) to \(b\):
+\[
+\ddot\theta = M^{-1} b
+= \frac{1}{\det M}
+\begin{pmatrix}
+a_{22} & -a_{12} \\[6pt]
+- a_{21} & a_{11}
+\end{pmatrix}
+\begin{pmatrix} b_1 \\[6pt] b_2 \end{pmatrix}.
+\]
+Therefore the components are
+\begin{align}
+\ddot{\theta}_1
+&= \frac{1}{\det M}\Big( a_{22}b_1 - a_{12}b_2 \Big), \label{eq:ddot1}\\[6pt]
+\ddot{\theta}_2
+&= \frac{1}{\det M}\Big( -a_{21}b_1 + a_{11}b_2 \Big). \label{eq:ddot2}
+\end{align}
+Substituting \(a_{ij}\) and \(b_k\) explicitly gives:
+\begin{equation}\label{ddtheta1}
+\begin{split}
+\ddot{\theta}_1
+= \dfrac{1}{\det M}\Big(
+  m_2 l_2\big(-m_2 l_2 \omega_2^2 \sin\Delta &- (m_1+m_2) g \sin\theta_1\big)\\
+  &- m_2 l_2 \cos\Delta\big(m_2 l_1 \omega_1^2 \sin\Delta - m_2 g \sin\theta_2\big)
+\Big)
+\end{split}
+\end{equation}
+and
+
+\begin{equation}\label{ddtheta2}
+\begin{split}
+\ddot{\theta}_2
+= \dfrac{1}{\det M}\Big(
+  - m_2 l_1 \cos\Delta\big(&-m_2 l_2\omega_2^2 \sin\Delta - (m_1+m_2) g \sin\theta_1\big)\\
+&+ (m_1+m_2)l_1\big(m_2 l_1 \omega_1^2 \sin\Delta - m_2 g \sin\theta_2\big)
+\Big).
+\end{split}
+\end{equation}
+
+\subsection{Convert to a first-order system.}
+Introduce the state vector
+\[
+X = \begin{pmatrix} \theta_1 \\[4pt] \theta_2 \\[4pt] \omega_1 \\[4pt] \omega_2 \end{pmatrix},
+\qquad \omega_i=\dot\theta_i.
+\]
+The first-order system is
+\[
+\dot X = F(X)
+= \begin{pmatrix}
+\omega_1 \\[6pt]
+\omega_2 \\[6pt]
+\ddot\theta_1(\theta_1,\theta_2,\omega_1,\omega_2) \\[6pt]
+\ddot\theta_2(\theta_1,\theta_2,\omega_1,\omega_2)
+\end{pmatrix},
+\]
+where \(\ddot\theta_1,\ddot\theta_2\) are given by equations \eqref{eq:ddot1} and \eqref{eq:ddot2} respectively.

@@ -4,7 +4,7 @@ To simulate the double pendulum, we must first derive the equations of motion. B
 
 \subsection{System Setup and Geometry}
 
-We consider a system of two point masses, $m_1$ and $m_2$, connected by massless rigid rods of length $l_1$ and $l_2$. The system is confined to a 2D plane and acted upon by a uniform gravitational field $g$ pointing downwards. The system can be visualized in \figref{system}. Note that the system allows for \(\theta_1\) to be greater than \(90^\circ\) and not intersect with the first pivot. 
+We consider a system of two point masses, $m_1$ and $m_2$, connected by massless rigid rods of length $l_1$ and $l_2$. The system is confined to a 2D plane and acted upon by a uniform gravitational field $g$ pointing downwards. The system can be visualized in \figref{system}. Note: unlike in \shortfigref{system}, the mathematical (and numeric) system will not intersect with itself or other objects.
 
 
 \begin{figure}[h]
@@ -59,15 +59,15 @@ We consider a system of two point masses, $m_1$ and $m_2$, connected by massless
 \figlabel{system}
 \end{figure}
 
+The system we will construct mathematically and depicted by \shortfigref{system} is a simple pendulum, which means that there is a point mass at the end of a massless rod. A compound pendulum can be similarly derived by just substituting the position of the point mass by the position of the center of mass respectively. 
 
-We define the generalized coordinates as the angles $\theta_1$ and $\theta_2$, measured from the vertical axis. The origin $(0,0)$ is the pivot point of the first pendulum.
 
-The Cartesian coordinates $(x_1, y_1)$ of the center of mass $m_1$ and $(x_2, y_2)$ of the center of mass $m_2$ can be expressed in terms of the angles:
+We define the generalized coordinates as the angles $\theta_1$ and $\theta_2$, measured from the vertical axis. The origin $(0,0)$ is the pivot point of the first pendulum. 
 \begin{align}
-  x_1 &= \frac{\ell_1}{2} \sin \theta_1 \\
-    y_1 &= -\frac{\ell_1}{2} \cos \theta_1 \\
-    x_2 &=\ell\lt(\sin\theta_1+\frac{1}{2}\sin\theta_2\rt)\\
-    y_2 &= - \ell\lt( \cos \theta_1+\frac{1}{2}\cos\theta_2\rt)
+  x_1 &= \ell_1 \sin \theta_1 \\
+    y_1 &= -\ell_1 \cos \theta_1 \\
+    x_2 &=\ell_1\sin\theta_1+\ell_2\sin\theta_2\\
+    y_2 &= - \ell_1\cos \theta_1+\ell_2\cos\theta_2
 \end{align}
 
 \subsection{The Lagrangian Formulation}
@@ -104,12 +104,12 @@ Applying the Euler-Lagrange equation for each coordinate $\theta_i$:
 Solving these derivatives yields a system of two coupled, non-linear second-order differential equations.
 
 \textbf{For $\theta_1$:}
-\begin{equation}
+\begin{equation}\label{theta1}
     (m_1 + m_2) l_1 \ddot{\theta}_1 + m_2 l_2 \ddot{\theta}_2 \cos(\theta_1 - \theta_2) + m_2 l_2 \dot{\theta}_2^2 \sin(\theta_1 - \theta_2) + (m_1 + m_2) g \sin \theta_1 = 0
 \end{equation}
 
 \textbf{For $\theta_2$:}
-\begin{equation}
+\begin{equation}\label{theta2}
     m_2 l_2 \ddot{\theta}_2 + m_2 l_1 \ddot{\theta}_1 \cos(\theta_1 - \theta_2) - m_2 l_1 \dot{\theta}_1^2 \sin(\theta_1 - \theta_2) + m_2 g \sin \theta_2 = 0
 \end{equation}
 
