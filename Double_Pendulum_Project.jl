@@ -7,7 +7,6 @@ things to do:
         ideally, our ivp problem spits out an array of problems that we can plug into our rk4 function
     2) tweak our rk4 algorithm to handle a system of four ODES
         this can be done with a nested for loop in the rk4 function definition, we just need to figure out how to tweak the output arrays properly
-    3) find out what to use for the "true value" that we compare our solutions to for our convergence graph
     4) plot this bitch
 
 """
@@ -41,6 +40,27 @@ function error_analysis(true_values, approx_values)
     end
     return error
 end
+
+#this should work to iterate our rk4 method over the tuple of IVP problems
+
+function rk4_tuple_call(ivp_tuple, n)
+    """
+    this inputs a tuple of ivp problems, and an n time step size, and outputs a time tuple and an approximate solution tuple 
+    """
+    #all the inner arrays here should be the same thing its just easier to get one for each for loop iteration
+    time_tuple = [[], [], [], []]
+    #sol_tuple[i] will hold the ith ivp solutions
+    sol_tuple = [[], [], [], []]
+    for problem in eachindex(ivp_tuple)
+        t, u = rk4(ivp_tuple[problem], n)
+        time_tuple[problem] = t
+        sol_tuple[problem] = u
+    end
+    return time_tuple, sol_tuple
+end
+
+
+
 
 
 #change this if needed
@@ -92,7 +112,6 @@ u0 = [initial_theta_one, intial_vel_one, initial_theta_two, intial_vel_two]
 
 p = (mass[1], mass[2], length[1], length[2], G)
 #here is our IVP
-# Ivp = ODEProblem(double_pendulum, deg2rad.([initial_theta[1], inital_velocity[1], initial_theta[2], inital_velocity[2]], time_span, p))
-#i think this is working....
+#need to figure out how to make IVP a tuple of length four to plug into our rk4 function
 IVP = ODEProblem(double_pendulum, deg2rad.(u0), time_span, p)
 
