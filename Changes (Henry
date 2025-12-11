@@ -1,4 +1,3 @@
-
 using Plots
 gr()  # Set plotting backend
 
@@ -31,8 +30,8 @@ function rk4(IVP, n)
     return t, u
 end
 
-# =================== Double Pendulum ODE =================== #
-function double_pendulum(du, u, p, t)
+# Double Pendulum ODE (returns vector)
+function double_pendulum(u, p, t)
     m1, m2, l1, l2, g = p
     θ1, ω1, θ2, ω2 = u
 
@@ -40,6 +39,7 @@ function double_pendulum(du, u, p, t)
     denom1 = (m1 + m2)*l1 - m2*l1*cos(Δ)^2
     denom2 = (l2/l1)*denom1
 
+    du = zeros(4)
     du[1] = ω1
     du[2] = ( m2*l1*ω1^2*sin(Δ)*cos(Δ) +
               m2*g*sin(θ2)*cos(Δ) +
@@ -52,10 +52,10 @@ function double_pendulum(du, u, p, t)
               (m1+m2)*l1*ω1^2*sin(Δ) -
               (m1+m2)*g*sin(θ2) ) / denom2
 
-    return nothing
+    return du
 end
 
-# =================== IVP Struct =================== #
+# IVP Struct 
 struct ODEProblem
     f::Function
     u0::Vector{Float64}
@@ -63,7 +63,7 @@ struct ODEProblem
     p::Tuple
 end
 
-# =================== Simulation Function =================== #
+# Simulation Function
 function simulate_pendulum(θ1_deg, θ2_deg; ω1=0.0, ω2=0.0)
     u0 = deg2rad.([θ1_deg, ω1, θ2_deg, ω2])
     p = (masses[1], masses[2], lengths[1], lengths[2], G)
@@ -72,7 +72,7 @@ function simulate_pendulum(θ1_deg, θ2_deg; ω1=0.0, ω2=0.0)
     return t, u
 end
 
-# =================== Plotting Multiple Initial Conditions =================== #
+# Plotting Multiple Initial Conditions
 initial_conditions = [
     (90.0, 90.0),
     (91.0, 90.0),
@@ -86,8 +86,6 @@ for (θ1, θ2) in initial_conditions
     plot!(t, rad2deg.(u[1,:]), label="θ₁ start=($θ1,$θ2)")
     plot!(t, rad2deg.(u[3,:]), label="θ₂ start=($θ1,$θ2)")
 end
-
-display(plot())
 
 t, u1 = simulate_pendulum(90.0, 90.0)
 t, u2 = simulate_pendulum(90.01, 90.0)
