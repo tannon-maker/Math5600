@@ -109,4 +109,36 @@
     bookmarksnumbered=true,
     bookmarksopen=true
 }
+
 \usepackage{varioref}
+
+\usepackage{listings}
+
+\lstdefinelanguage{Julia}{
+  keywords={function, end, return, for, while, if, else, elseif, mutable, struct},
+  keywordstyle=\color{blue}\bfseries,
+  comment=[l]\#,
+  commentstyle=\color{gray},
+  stringstyle=\color{red},
+}
+
+\lstset{
+  language=Julia,
+  basicstyle=\ttfamily\small,
+  numbers=left,             % ← line numbers
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=8pt,            
+  breaklines=true,          % ← wrap long lines
+  breakatwhitespace=false,
+  columns=fullflexible,     % better wrapping
+  showstringspaces=false,
+  mathescape=true,
+  escapeinside={(*@}{@*)},
+  literate=
+    {θ}{{$\theta$}}1
+    {Θ}{{$\Theta$}}1
+    {Δ}{{$\Delta$}}1
+    {ω}{{$\omega$}}1
+    {Ω}{{$\Omega$}}1
+}
