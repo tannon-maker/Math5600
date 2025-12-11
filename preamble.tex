@@ -102,11 +102,48 @@
 \usepackage{theoremref} % Must load after amsthm and hyperref
 \usepackage{bookmark} % Better PDF bookmarks
 \usepackage{nameref} % Reference sections by name
+\definecolor{darkblue}{rgb}{0,0,0.5}
+\definecolor{darkred}{rgb}{0.5,0,0}
+
 \hypersetup{
     pdftitle={Assignment},
-    colorlinks=true, 
-    linkcolor=blue!90,
+    colorlinks=true,
+    linkcolor=darkred,    % Internal (Goes to section/eq)
+    citecolor=darkred,    % Citations (Goes to bibliography)
+    urlcolor=darkblue,    % External (Goes to web)
     bookmarksnumbered=true,
     bookmarksopen=true
 }
+
 \usepackage{varioref}
+
+\usepackage{listings}
+
+\lstdefinelanguage{Julia}{
+  keywords={function, end, return, for, while, if, else, elseif, mutable, struct},
+  keywordstyle=\color{blue}\bfseries,
+  comment=[l]\#,
+  commentstyle=\color{gray},
+  stringstyle=\color{red},
+}
+
+\lstset{
+  language=Julia,
+  basicstyle=\ttfamily\small,
+  numbers=left,             % ← line numbers
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=8pt,            
+  breaklines=true,          % ← wrap long lines
+  breakatwhitespace=false,
+  columns=fullflexible,     % better wrapping
+  showstringspaces=false,
+  mathescape=true,
+  escapeinside={(*@}{@*)},
+  literate=
+    {θ}{{$\theta$}}1
+    {Θ}{{$\Theta$}}1
+    {Δ}{{$\Delta$}}1
+    {ω}{{$\omega$}}1
+    {Ω}{{$\Omega$}}1
+}

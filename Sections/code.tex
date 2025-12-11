@@ -1,2 +1,105 @@
 \appendix\section{Julia Code}
 \applabel{A}
+
+Here is the compilation of all Julia code needed to solve the system in this paper.
+\begin{lstlisting}
+using Plots
+gr()  # Set plotting backend
+
+# parameters
+G = 9.8
+lengths = [2.0, 2.0]
+masses = [2.0, 2.0]
+time_span = (0.0, 30.0)  # 30 seconds
+n_steps = 15000           # RK4 steps
+
+# =================== RK4 Solver =================== #
+function rk4(IVP, n)
+    a, b = IVP.tspan
+    h = (b - a)/n
+    t = [a + i*h for i in 0:n]
+
+    u0 = IVP.u0
+    m = length(u0)
+    u = zeros(m, n+1)
+    u[:,1] .= u0
+
+    for i in 1:n
+        k1 = h * IVP.f(u[:,i], IVP.p, t[i])
+        k2 = h * IVP.f(u[:,i] + k1/2, IVP.p, t[i] + h/2)
+        k3 = h * IVP.f(u[:,i] + k2/2, IVP.p, t[i] + h/2)
+        k4 = h * IVP.f(u[:,i] + k3, IVP.p, t[i] + h)
+        u[:,i+1] = u[:,i] + (k1 + 2*k2 + 2*k3 + k4)/6
+    end
+
+    return t, u
+end
+
+# Double Pendulum ODE (returns vector)
+function double_pendulum(u, p, t)
+    m1, m2, l1, l2, g = p
+    theta1, omega1, theta2, omega2 = u
+
+    Delta = theta2 - theta1
+    denom1 = (m1 + m2)*l1 - m2*l1*cos(Delta)^2
+    denom2 = (l2/l1)*denom1
+
+    du = zeros(4)
+    du[1] = omega1
+    du[2] = ( m2*l1*omega1^2*sin(Delta)*cos(Delta) +
+              m2*g*sin(theta2)*cos(Delta) +
+              m2*l2*omega2^2*sin(Delta) -
+              (m1+m2)*g*sin(theta1) ) / denom1
+
+    du[3] = omega2
+    du[4] = ( -m2*l2*omega2^2*sin(Delta)*cos(Delta) +
+              (m1+m2)*g*sin(theta1)*cos(Delta) -
+              (m1+m2)*l1*omega1^2*sin(Delta) -
+              (m1+m2)*g*sin(theta2) ) / denom2
+
+    return du
+end
+
+# IVP Struct 
+struct ODEProblem
+    f::Function
+    u0::Vector{Float64}
+    tspan::Tuple{Float64, Float64}
+    p::Tuple
+end
+
+# Simulation Function
+function simulate_pendulum(theta1_deg, theta2_deg; omega1=0.0, omega2=0.0)
+    u0 = deg2rad.([theta1_deg, omega1, theta2_deg, omega2])
+    p = (masses[1], masses[2], lengths[1], lengths[2], G)
+    IVP = ODEProblem(double_pendulum, u0, time_span, p)
+    t, u = rk4(IVP, n_steps)
+    return t, u
+end
+
+# Plotting Multiple Initial Conditions
+initial_conditions = [
+    (90.0, 90.0),
+    (91.0, 90.0),
+    (90.0, 91.0)
+]
+
+plot(title="Double Pendulum Theta vs Time", xlabel="Time (s)", ylabel="Angle (deg)")
+
+for (theta1, theta2) in initial_conditions
+    t, u = simulate_pendulum(theta1, theta2)
+    plot!(t, rad2deg.(u[1,:]), label="theta1 start=($theta1,$theta2)")
+    plot!(t, rad2deg.(u[3,:]), label="theta2 start=($theta1,$theta2)")
+end
+
+t, u1 = simulate_pendulum(90.0, 90.0)
+t, u2 = simulate_pendulum(90.00001, 90.0)
+x_vals = @. lengths[1] * sin(u[1,:]) + lengths[2] * sin(u[3,:])
+y_vals = @. -lengths[1] * cos(u[1,:]) - lengths[2] * cos(u[3,:])
+
+# Plotting Delta Theta graph
+plot(t, rad2deg.(abs.(u1[1,:] .- u2[1,:])), label="Delta theta1", xlabel="Time (s)", ylabel="Angle difference (deg)", title="Sensitivity to Initial Conditions")
+
+# Plotting (x,y) graph
+plot(x_vals, y_vals, xlabel="x (m)", ylabel="y (m)", title="Pendulum Trajectory", aspect_ratio=:equal, label="")
+\end{lstlisting}
