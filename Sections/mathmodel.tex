@@ -59,7 +59,7 @@ We consider a system of two point masses, $m_1$ and $m_2$, connected by massless
 \figlabel{system}
 \end{figure}
 
-The system we will construct mathematically and depicted by \shortfigref{system} is a simple pendulum, which means that there is a point mass at the end of a massless rod. A compound pendulum can be similarly derived by just substituting the position of the point mass by the position of the center of mass respectively. 
+The system we will construct mathematically and depicted by \shortfigref{system} is a simple pendulum, which means that there is a point mass at the end of a massless rod. A compound pendulum can be similarly derived by just substituting the position of the point masses by the position of the centers of mass.
 
 
 We define the generalized coordinates as the angles $\theta_1$ and $\theta_2$, measured from the vertical axis. The origin $(0,0)$ is the pivot point of the first pendulum. 
@@ -103,12 +103,12 @@ Applying the Euler-Lagrange equation for each coordinate $\theta_i$:
 
 Solving these derivatives yields a system of two coupled, non-linear second-order differential equations.
 
-\textbf{For $\theta_1$:}
+For $\theta_1$:
 \begin{equation}\label{theta1}
     (m_1 + m_2) l_1 \ddot{\theta}_1 + m_2 l_2 \ddot{\theta}_2 \cos(\theta_1 - \theta_2) + m_2 l_2 \dot{\theta}_2^2 \sin(\theta_1 - \theta_2) + (m_1 + m_2) g \sin \theta_1 = 0
 \end{equation}
 
-\textbf{For $\theta_2$:}
+For $\theta_2$:
 \begin{equation}\label{theta2}
     m_2 l_2 \ddot{\theta}_2 + m_2 l_1 \ddot{\theta}_1 \cos(\theta_1 - \theta_2) - m_2 l_1 \dot{\theta}_1^2 \sin(\theta_1 - \theta_2) + m_2 g \sin \theta_2 = 0
 \end{equation}
