@@ -102,10 +102,15 @@
 \usepackage{theoremref} % Must load after amsthm and hyperref
 \usepackage{bookmark} % Better PDF bookmarks
 \usepackage{nameref} % Reference sections by name
+\definecolor{darkblue}{rgb}{0,0,0.5}
+\definecolor{darkred}{rgb}{0.5,0,0}
+
 \hypersetup{
     pdftitle={Assignment},
-    colorlinks=true, 
-    linkcolor=blue!90,
+    colorlinks=true,
+    linkcolor=darkred,    % Internal (Goes to section/eq)
+    citecolor=darkred,    % Citations (Goes to bibliography)
+    urlcolor=darkblue,    % External (Goes to web)
     bookmarksnumbered=true,
     bookmarksopen=true
 }

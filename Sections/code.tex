@@ -1,6 +1,7 @@
 \appendix\section{Julia Code}
 \applabel{A}
 
+Here is the compilation of all Julia code needed to solve the system in this paper.
 \begin{lstlisting}
 using Plots
 gr()  # Set plotting backend
@@ -37,24 +38,24 @@ end
 # Double Pendulum ODE (returns vector)
 function double_pendulum(u, p, t)
     m1, m2, l1, l2, g = p
-    θ1, ω1, θ2, ω2 = u
+    theta1, omega1, theta2, omega2 = u
 
-    Δ = θ2 - θ1
-    denom1 = (m1 + m2)*l1 - m2*l1*cos(Δ)^2
+    Delta = theta2 - theta1
+    denom1 = (m1 + m2)*l1 - m2*l1*cos(Delta)^2
     denom2 = (l2/l1)*denom1
 
     du = zeros(4)
-    du[1] = ω1
-    du[2] = ( m2*l1*ω1^2*sin(Δ)*cos(Δ) +
-              m2*g*sin(θ2)*cos(Δ) +
-              m2*l2*ω2^2*sin(Δ) -
-              (m1+m2)*g*sin(θ1) ) / denom1
+    du[1] = omega1
+    du[2] = ( m2*l1*omega1^2*sin(Delta)*cos(Delta) +
+              m2*g*sin(theta2)*cos(Delta) +
+              m2*l2*omega2^2*sin(Delta) -
+              (m1+m2)*g*sin(theta1) ) / denom1
 
-    du[3] = ω2
-    du[4] = ( -m2*l2*ω2^2*sin(Δ)*cos(Δ) +
-              (m1+m2)*g*sin(θ1)*cos(Δ) -
-              (m1+m2)*l1*ω1^2*sin(Δ) -
-              (m1+m2)*g*sin(θ2) ) / denom2
+    du[3] = omega2
+    du[4] = ( -m2*l2*omega2^2*sin(Delta)*cos(Delta) +
+              (m1+m2)*g*sin(theta1)*cos(Delta) -
+              (m1+m2)*l1*omega1^2*sin(Delta) -
+              (m1+m2)*g*sin(theta2) ) / denom2
 
     return du
 end
@@ -68,8 +69,8 @@ struct ODEProblem
 end
 
 # Simulation Function
-function simulate_pendulum(θ1_deg, θ2_deg; ω1=0.0, ω2=0.0)
-    u0 = deg2rad.([θ1_deg, ω1, θ2_deg, ω2])
+function simulate_pendulum(theta1_deg, theta2_deg; omega1=0.0, omega2=0.0)
+    u0 = deg2rad.([theta1_deg, omega1, theta2_deg, omega2])
     p = (masses[1], masses[2], lengths[1], lengths[2], G)
     IVP = ODEProblem(double_pendulum, u0, time_span, p)
     t, u = rk4(IVP, n_steps)
@@ -83,12 +84,12 @@ initial_conditions = [
     (90.0, 91.0)
 ]
 
-plot(title="Double Pendulum θ vs Time", xlabel="Time (s)", ylabel="Angle (deg)")
+plot(title="Double Pendulum Theta vs Time", xlabel="Time (s)", ylabel="Angle (deg)")
 
-for (θ1, θ2) in initial_conditions
-    t, u = simulate_pendulum(θ1, θ2)
-    plot!(t, rad2deg.(u[1,:]), label="θ₁ start=($θ1,$θ2)")
-    plot!(t, rad2deg.(u[3,:]), label="θ₂ start=($θ1,$θ2)")
+for (theta1, theta2) in initial_conditions
+    t, u = simulate_pendulum(theta1, theta2)
+    plot!(t, rad2deg.(u[1,:]), label="theta1 start=($theta1,$theta2)")
+    plot!(t, rad2deg.(u[3,:]), label="theta2 start=($theta1,$theta2)")
 end
 
 t, u1 = simulate_pendulum(90.0, 90.0)
@@ -96,8 +97,9 @@ t, u2 = simulate_pendulum(90.00001, 90.0)
 x_vals = @. lengths[1] * sin(u[1,:]) + lengths[2] * sin(u[3,:])
 y_vals = @. -lengths[1] * cos(u[1,:]) - lengths[2] * cos(u[3,:])
 
-#Ploting Δθ graph
-plot(t, rad2deg.(abs.(u1[1,:] .- u2[1,:])), label="Δθ₁", xlabel="Time (s)", ylabel="Angle difference (deg)", title="Sensitivity to Initial Conditions")
-#Ploting (x,y) graph
+# Plotting Delta Theta graph
+plot(t, rad2deg.(abs.(u1[1,:] .- u2[1,:])), label="Delta theta1", xlabel="Time (s)", ylabel="Angle difference (deg)", title="Sensitivity to Initial Conditions")
+
+# Plotting (x,y) graph
 plot(x_vals, y_vals, xlabel="x (m)", ylabel="y (m)", title="Pendulum Trajectory", aspect_ratio=:equal, label="")
 \end{lstlisting}
