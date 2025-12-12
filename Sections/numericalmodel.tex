@@ -1,9 +1,9 @@
 \section{Preparing for Numerical Model}
 
-Implementing RK4 requires transforming the coupled second-order differential equations derived in Section 2 into a system of first-order differential equations.
+Implementing RK4 requires transforming the second-order differential equations derived in Section 2 into a system of first-order differential equations.
 
 \subsection{Matrix Formulation of Motion}
-We begin with the coupled Euler-Lagrange equations \eqref{theta1} and \eqref{theta2}. By grouping the angular acceleration terms ($\ddot{\theta}_1, \ddot{\theta}_2$) on the left-hand side and the remaining velocity and potential terms on the right, we obtain the following linear system:
+We begin with the Euler-Lagrange equations \eqref{theta1} and \eqref{theta2}. By grouping the angular acceleration terms ($\ddot{\theta}_1, \ddot{\theta}_2$) on the left-hand side and the remaining velocity and potential terms on the right, we obtain the following linear system:
 
 \begin{align}
   (m_1 + m_2) l_1 \ddot{\theta}_1 + m_2 l_2 \cos(\theta_1-\theta_2)\ddot{\theta}_2
@@ -36,7 +36,7 @@ m_2 l_1 \omega_1^2 \sin(\theta_1-\theta_2) - m_2 g \sin\theta_2
 \end{equation*}
 
 \subsection{Explicit Acceleration Terms}
-To solve for the angular accelerations $\ddot{\theta}$, we invert the mass matrix $M$. For a $2\times2$ matrix, the inverse is explicitly given by:
+There are many applicable methods we can utilize to solve for the angular accelerations $\ddot{\theta}$. For its ease, we will invert the mass matrix $M$. For a $2\times2$ matrix, the inverse is explicitly given by:
 \[
 \ddot{\theta} = M^{-1} b = \frac{1}{\det M}
 \begin{pmatrix}
@@ -55,7 +55,7 @@ Defining the angle difference as $\Delta\theta = \theta_1 - \theta_2$, the deter
 \ddot{\theta}_2 = \frac{1}{\det M} \left[ -m_2 l_1 \cos(\Delta\theta) b_1 + (m_1+m_2)l_1 b_2 \right]. \label{ddtheta2}
 \end{equation}
 
-Substituting the components of vector $b$ (from \eqref{eq:rearr1} and \eqref{eq:rearr2}) into these expressions provides the functions necessary for the numerical solver.
+Substituting the components of vector $b$ (from \eqref{eq:rearr1} and \eqref{eq:rearr2}) into these expressions provides the necessary system allowing for numerical solvers such as the RK4 method we will use.
 
 \subsection{State-Space Representation}
 Finally, we convert the two second-order equations into a system of four first-order equations. We introduce the state vector $X$:
@@ -78,9 +78,9 @@ The time evolution of the system is governed by $\dot{X} = F(X)$:
 where $\ddot{\theta}_1$ and $\ddot{\theta}_2$ are determined by equations \eqref{ddtheta1} and \eqref{ddtheta2}. This vector $F(X)$ is passed directly to the RK4 algorithm.
 
 \subsection{Numerical Implementation: The RK4 Algorithm}
-With the system reduced to the first-order form $\dot{X} = F(X)$, we can now apply the classical fourth-order Runge-Kutta (RK4) method to numerically integrate the equations of motion. This method is preferred over simpler schemes (like Euler's method) because its local truncation error is of order $O(h^4)$, providing the high precision necessary to track chaotic trajectories.
+With the system reduced to the first-order form $\dot{X} = F(X)$, we can now apply the Runge-Kutta-4 method to numerically integrate the equations of motion. This method is preferred over schemes like Euler's method, because its local truncation error is of order $O(h^4)$, providing the high precision necessary to track chaotic trajectories.
 
-Given the state vector $X_n$ at time $t_n$ and a time step $h$, the next state $X_{n+1}$ is computed as a weighted average of four slope estimates:
+Given the vector $X_n$ at time $t_n$ and a time step $h$, the next state $X_{n+1}$ is computed as a weighted average of four slope estimates:
 \[
 X_{n+1} = X_n + \frac{h}{6} (k_1 + 2k_2 + 2k_3 + k_4),
 \]
@@ -91,4 +91,4 @@ k_2 &= F\left(X_n + \frac{h}{2} k_1\right), \\
 k_3 &= F\left(X_n + \frac{h}{2} k_2\right), \\
 k_4 &= F(X_n + h k_3).
 \end{align*}
-In these equations, the function $F$ corresponds to the system defined in Section 3.3, which calculates the derivatives $[\omega_1, \omega_2, \ddot{\theta}_1, \ddot{\theta}_2]^T$ at each step. This algorithm ensures that the non-linearities of the double pendulum are captured accurately even over extended simulation times. The full Julia code implementing this solver can be found in \appref{A}.
+In these equations, the function $F$ corresponds to the operator defined back in Section 3.3, which calculates the derivatives $[\omega_1, \omega_2, \ddot{\theta}_1, \ddot{\theta}_2]^T$ at each step. This algorithm ensures that the non-linearities of the double pendulum are captured accurately even over extended simulation times, although we will not be determining the limit of its stability, it is certainly much longer than our simulation time. The full Julia code implementing this solver can be found in \appref{A}.

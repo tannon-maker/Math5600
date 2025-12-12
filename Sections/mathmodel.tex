@@ -1,11 +1,10 @@
 \section{Mathematical Model}
 
-To simulate the double pendulum, we must first derive the equations of motion. Because the system involves multiple degrees of freedom, the Lagrangian formulation of mechanics is significantly more efficient than the Newtonian approach \cite{taylor}.
+We must first derive the equations of motion. Because the system involves multiple degrees of freedom, the Lagrangian formulation of mechanics is significantly more efficient than the Newtonian approach \cite{taylor}.
 
 \subsection{System Setup and Geometry}
 
-We consider a system of two point masses, $m_1$ and $m_2$, connected by massless rigid rods of length $l_1$ and $l_2$. The system is confined to a 2D plane and acted upon by a uniform gravitational field $g$ pointing downwards. The system can be visualized in \figref{system}. Note: unlike in \shortfigref{system}, the mathematical (and numeric) system will not intersect with itself or other objects.
-
+We consider a system of two point masses, $m_1$ and $m_2$, connected by massless rigid rods of length $l_1$ and $l_2$. The system is confined to a 2D plane and acted upon by a uniform gravitational field $g$ pointing downwards. The system can be visualized in \figref{system}. Note: unlike in \shortfigref{system}, the mathematical (and numerical) system will not intersect with itself or other objects.
 
 \begin{figure}[h]
 \begin{center}
@@ -59,10 +58,9 @@ We consider a system of two point masses, $m_1$ and $m_2$, connected by massless
 \figlabel{system}
 \end{figure}
 
-The system we will construct mathematically and depicted by \shortfigref{system} is a simple pendulum, which means that there is a point mass at the end of a massless rod. A compound pendulum can be similarly derived by just substituting the position of the point masses by the position of the centers of mass \cite{wikidp}.
+The system we will construct mathematically, and which is depicted in \shortfigref{system}, is a simple pendulum. A compound pendulum can be similarly derived by just substituting the positions of the point masses with the positions of the centers of mass \cite{wikidp}.
 
-
-We define the generalized coordinates as the angles $\theta_1$ and $\theta_2$, measured from the vertical axis. The origin $(0,0)$ is the pivot point of the first pendulum. 
+We define the generalized coordinates as the angles $\theta_1$ and $\theta_2$, measured from the vertical axis. The origin is the pivot point of the first pendulum. This will be easier to compute mathematically, and therefore numerically than the Cartesian system, although it is easier to visualize as such.
 \begin{align}
   x_1 &= \ell_1 \sin \theta_1 \\
     y_1 &= -\ell_1 \cos \theta_1 \\
@@ -76,7 +74,7 @@ The Lagrangian $\mathcal{L}$ is defined as the difference between the kinetic en
 \[ \mathcal{L} = T - V \]
 
 \subsubsection{Kinetic Energy ($T$)}
-The total kinetic energy is the sum of the kinetic energies of the individual masses:
+The kinetic energy of the system is the sum of the kinetic energies of the masses:
 \[ T = \frac{1}{2}m_1 v_1^2 + \frac{1}{2}m_2 v_2^2 \]
 Calculating the velocities squared ($v^2 = \dot{x}^2 + \dot{y}^2$):
 \begin{align*}
@@ -101,7 +99,7 @@ Assuming potential energy is zero at $y=0$, we have:
 Applying the Euler-Lagrange equation for each coordinate $\theta_i$:
 \[ \frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\theta}_i}\right) - \frac{\partial \mathcal{L}}{\partial \theta_i} = 0 \]
 
-Solving these derivatives yields a system of two coupled, non-linear second-order differential equations.
+Solving these derivatives yields a system of two, non-linear second-order differential equations.
 
 For $\theta_1$:
 \begin{equation}\label{theta1}
@@ -113,4 +111,4 @@ For $\theta_2$:
     m_2 l_2 \ddot{\theta}_2 + m_2 l_1 \ddot{\theta}_1 \cos(\theta_1 - \theta_2) - m_2 l_1 \dot{\theta}_1^2 \sin(\theta_1 - \theta_2) + m_2 g \sin \theta_2 = 0
 \end{equation}
 
-These two equations fully describe the motion of the double pendulum. In Section 3, we will rearrange these terms to solve for $\ddot{\theta}_1$ and $\ddot{\theta}_2$ explicitly to implement the RK4 algorithm.
+These two equations completely describe the motion of the double pendulum. In Section 3, we will rearrange these terms to solve for $\ddot{\theta}_1$ and $\ddot{\theta}_2$ explicitly to implement the RK4 algorithm.
